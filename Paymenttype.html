@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment System Selector</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	
+	<style>
+	
+	.background-container {
+        background-image: url('background.webp');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        opacity: 0.2; /* Set the opacity value of your choice (from 0.0 to 1.0) */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1; /* Set the z-index to make the image container "behind" the main content */
+    }
+	
+    #recommendations li {
+        font-size: 20px; /* Increase font size to your liking */
+        font-weight: bold; /* Bold font style */
+        line-height: 1.8; /* Increase line height */
+        margin-bottom: 5px; /* Add bottom margin to each item */
+    }
+</style>
+</head>
+<body>
+    <div class="background-container"></div>
+	<li class="list-group-item list-group-item-dark">  created by Dan Boiko © ver 0.1</li>
+	
+	<div class="container mt-5">
+        <h1>Payment System Selector</h1>
+
+        <!-- Form for selecting parameters -->
+        <form>
+            <div class="mb-3">
+                <label for="country" class="form-label">Select Country</label>
+                <select class="form-select" id="country">
+                    <option value="UK">UK</option>
+                    <option value="Italy">Italy</option>
+                    <!-- Add other countries here -->
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="age" class="form-label">Select Age</label>
+                <input type="number" class="form-control" id="age">
+            </div>
+            <div class="mb-3">
+                <label for="amount" class="form-label">Enter Amount</label>
+                <input type="number" class="form-control" id="amount">
+            </div>
+            <div class="mb-3">
+                <label for="bank" class="form-label">Select Bank</label>
+                <select class="form-select" id="bank">
+                    <option value="Bank 1">Bank Transfer</option>
+                    <option value="Bank 2">Credit Card</option>
+                    <!-- Add other banks here -->
+                </select>
+            </div>
+        </form>
+
+        <!-- List of payment system recommendations -->
+        <div class="mt-4">
+            <h3>Recommended Payment Type:</h3>
+            <ul id="recommendations"></ul>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap and JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script>
+    // Get a reference to the recommendation list element
+    const recommendationList = document.getElementById('recommendations');
+
+    // Declare variables for form elements
+    const countrySelect = document.getElementById('country');
+    const ageInput = document.getElementById('age');
+    const amountInput = document.getElementById('amount');
+    const bankSelect = document.getElementById('bank');
+
+    // Example of updating recommendations with color coding
+    function updateRecommendations() {
+        const selectedCountry = countrySelect.value;
+        const selectedAge = parseInt(ageInput.value);
+        const selectedAmount = parseInt(amountInput.value);
+        const selectedBank = bankSelect.value;
+
+        // Your logic to determine payment system recommendations
+        let recommendations = [];
+
+        if (selectedCountry === 'UK') {
+            if (selectedAge <= 80 && selectedAge >= 18) {
+                if (selectedAmount <= 2500) {
+                    recommendations = ['Zen', 'Revolute'];
+                } else if (selectedAmount > 2500 && selectedAmount <= 5000) {
+                    recommendations = ['Swissbord', 'Zen'];
+                } else {
+                    recommendations = ['Zen', 'PayPal'];
+                }
+            } else {
+                recommendations = ['Visa', 'Zen'];
+            }
+        } else if (selectedCountry === 'Italy') {
+            if (selectedAge <= 65) {
+                if (selectedAmount <= 1000) {
+                    recommendations = ['Zen', 'Master Card'];
+                } else if (selectedAmount > 1000 && selectedAmount <= 5000) {
+                    recommendations = ['Visa', 'Zen'];
+                } else {
+                    recommendations = ['Other recommendations'];
+                }
+            } else {
+                recommendations = ['Visa', 'Zen'];
+            }
+        } else if (selectedCountry === 'Germany') {
+            // Logic for Germany...
+        } else if (selectedCountry === 'Italy') {
+            // Logic for Italy...
+        } else if (selectedCountry === 'Spain') {
+            // Logic for Spain...
+        } else {
+            recommendations = ['Other recommendations'];
+        }
+
+        // Clear and update the recommendations list
+        recommendationList.innerHTML = '';
+        recommendations.forEach((recommendation) => {
+            const listItem = document.createElement('li');
+            listItem.textContent = recommendation;
+
+            // Apply color classes dynamically based on conditions
+            if (recommendation === 'PayPal') {
+                if (selectedAge <= 30) {
+                    listItem.classList.add('text-success'); // Green color
+                } else if (selectedAge <= 60) {
+                    listItem.classList.add('text-warning'); // Yellow color
+                } else {
+                    listItem.classList.add('text-danger'); // Red color
+                }
+            } else if (recommendation === 'Visa') {
+                // Add logic for Visa based on conditions
+                // Example: Add classes for different colors based on the amount
+                if (selectedAmount <= 1000) {
+                    listItem.classList.add('text-success');
+                } else if (selectedAmount <= 5000) {
+                    listItem.classList.add('text-warning');
+                } else {
+                    listItem.classList.add('text-danger');
+                }
+            } 
+			else if (recommendation === 'Swissbord') {
+                // Add logic for Visa based on conditions
+                // Example: Add classes for different colors based on the amount
+                if (selectedAmount >= 2500) {
+                    listItem.classList.add('text-success');
+                } else if (selectedAmount <= 5000) {
+                    listItem.classList.add('text-warning');
+                } else {
+                    listItem.classList.add('text-danger');
+                }
+            }
+			else if (recommendation === 'Zen') {
+                // Add logic for Zen based on conditions
+                // Example: Add classes for different colors based on the bank
+                if (selectedBank === 'Bank 1') {
+                    listItem.classList.add('text-success');
+                } else {
+                    listItem.classList.add('text-danger');
+                }
+            }
+
+            recommendationList.appendChild(listItem);
+        });
+    }
+
+    // Add event change handlers for form elements
+    countrySelect.addEventListener('change', updateRecommendations);
+    ageInput.addEventListener('input', updateRecommendations);
+    amountInput.addEventListener('input', updateRecommendations);
+    bankSelect.addEventListener('change', updateRecommendations);
+
+    // Initialize recommendations on page load
+    updateRecommendations();
+</script>
+
+</body>
+</html>
