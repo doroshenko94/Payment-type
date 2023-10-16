@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment System Selector</title>
-    <!-- Include Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 	
-	<style>
-	
-	.background-container {
+  <style>
+  .background-container {
         background-image: url('background.webp');
         background-size: cover;
         background-repeat: no-repeat;
@@ -22,172 +20,194 @@
         height: 100%;
         z-index: -1; /* Set the z-index to make the image container "behind" the main content */
     }
-	
-    #recommendations li {
-        font-size: 20px; /* Increase font size to your liking */
-        font-weight: bold; /* Bold font style */
-        line-height: 1.8; /* Increase line height */
-        margin-bottom: 5px; /* Add bottom margin to each item */
+  
+    .color-box {
+      width: 100%;
+      height: 140px;
+      margin: 10px 0;
+      display: inline-block;
+      border: 3px solid transparent;
+      border-radius: 25px;
     }
-</style>
+
+    .green-box {
+      border-color: green;
+    }
+
+    .yellow-box {
+      border-color: yellow;
+    }
+
+    .red-box {
+      border-color: red;
+    }
+
+    .panel-heading {
+      background-color: #f5f5f5;
+      border-radius: 15px;
+      padding: 10px;
+      font-weight: bold;
+    }
+
+    .panel-body {
+      padding: 10px;
+    }
+  </style>
 </head>
 <body>
-    <div class="background-container"></div>
-	<li class="list-group-item list-group-item-dark">  created by Dan Boiko © ver 0.1</li>
-	
-	<div class="container mt-5">
-        <h1>Payment System Selector</h1>
+<li class="list-group-item list-group-item-dark">  created by Dan Boiko © ver 0.1</li>
+<div class="background-container"></div>
+<div class="container-fluid mt-4">
+  <h3>Select a country:</h3>
+  <select class="custom-select" id="countrySelect">
+    <option value="default">Select a country</option>
+    <option value="UK">UK</option>
+    <option value="IRELAND">IRELAND</option>
+    <!-- Добавьте остальные страны по аналогии -->
+  </select>
+</div>
 
-        <!-- Form for selecting parameters -->
-        <form>
-            <div class="mb-3">
-                <label for="country" class="form-label">Select Country</label>
-                <select class="form-select" id="country">
-                    <option value="UK">UK</option>
-                    <option value="Italy">Italy</option>
-                    <!-- Add other countries here -->
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="age" class="form-label">Select Age</label>
-                <input type="number" class="form-control" id="age">
-            </div>
-            <div class="mb-3">
-                <label for="amount" class="form-label">Enter Amount</label>
-                <input type="number" class="form-control" id="amount">
-            </div>
-            <div class="mb-3">
-                <label for="bank" class="form-label">Select Bank</label>
-                <select class="form-select" id="bank">
-                    <option value="Bank 1">Bank Transfer</option>
-                    <option value="Bank 2">Credit Card</option>
-                    <!-- Add other banks here -->
-                </select>
-            </div>
-        </form>
+<div class="container-fluid mt-4">
+  <h3>Select the type of payment:</h3>
+  <select class="custom-select" id="companySelect" disabled>
+    <option value="default">Select the type of payment:</option>
+  </select>
+</div>
 
-        <!-- List of payment system recommendations -->
-        <div class="mt-4">
-            <h3>Recommended Payment Type:</h3>
-            <ul id="recommendations"></ul>
-        </div>
+<div class="container-fluid mt-4">
+  <div class="color-box green-box" id="greenBox">
+    <div class="panel panel-default">
+      <div class="panel-heading">Information on the age and amount of the transaction</div>
+      <div class="panel-body" id="greenBoxInfo"></div>
     </div>
+  </div>
+  <div class="color-box yellow-box" id="yellowBox">
+    <div class="panel panel-default">
+      <div class="panel-heading">More info</div>
+      <div class="panel-body" id="yellowBoxCompanyInfo"></div>
+    </div>
+  </div>
+  <div class="color-box red-box" id="redBox">
+    <div class="panel panel-default">
+      <div class="panel-heading">FYI</div>
+      <div class="panel-body" id="redBoxCompanyInfo"></div>
+    </div>
+  </div>
+</div>
 
-    <!-- Include Bootstrap and JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-    <script>
-    // Get a reference to the recommendation list element
-    const recommendationList = document.getElementById('recommendations');
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  const companyOptions = {
+    UK: ["Revolut", "Zen", "SwissBorg", "Cryptocom", "Simplex", "W1tty", "Bit2me", "Bestwallet", "CoinZoom", "Wise"],
+    IRELAND: ["Revolut", "Zen", "SwissBorg", "Cryptocom", "AdvCash", "AdV2", "W1tty", "Bit2me", "Wise", "Bestwallet"]
+    // Добавьте другие страны и компании по аналогии
+  };
 
-    // Declare variables for form elements
-    const countrySelect = document.getElementById('country');
-    const ageInput = document.getElementById('age');
-    const amountInput = document.getElementById('amount');
-    const bankSelect = document.getElementById('bank');
-
-    // Example of updating recommendations with color coding
-    function updateRecommendations() {
-        const selectedCountry = countrySelect.value;
-        const selectedAge = parseInt(ageInput.value);
-        const selectedAmount = parseInt(amountInput.value);
-        const selectedBank = bankSelect.value;
-
-        // Your logic to determine payment system recommendations
-        let recommendations = [];
-
-        if (selectedCountry === 'UK') {
-            if (selectedAge <= 80 && selectedAge >= 18) {
-                if (selectedAmount <= 2500) {
-                    recommendations = ['Zen', 'Revolute'];
-                } else if (selectedAmount > 2500 && selectedAmount <= 5000) {
-                    recommendations = ['Swissbord', 'Zen'];
-                } else {
-                    recommendations = ['Zen', 'PayPal'];
-                }
-            } else {
-                recommendations = ['Visa', 'Zen'];
-            }
-        } else if (selectedCountry === 'Italy') {
-            if (selectedAge <= 65) {
-                if (selectedAmount <= 1000) {
-                    recommendations = ['Zen', 'Master Card'];
-                } else if (selectedAmount > 1000 && selectedAmount <= 5000) {
-                    recommendations = ['Visa', 'Zen'];
-                } else {
-                    recommendations = ['Other recommendations'];
-                }
-            } else {
-                recommendations = ['Visa', 'Zen'];
-            }
-        } else if (selectedCountry === 'Germany') {
-            // Logic for Germany...
-        } else if (selectedCountry === 'Italy') {
-            // Logic for Italy...
-        } else if (selectedCountry === 'Spain') {
-            // Logic for Spain...
-        } else {
-            recommendations = ['Other recommendations'];
-        }
-
-        // Clear and update the recommendations list
-        recommendationList.innerHTML = '';
-        recommendations.forEach((recommendation) => {
-            const listItem = document.createElement('li');
-            listItem.textContent = recommendation;
-
-            // Apply color classes dynamically based on conditions
-            if (recommendation === 'PayPal') {
-                if (selectedAge <= 30) {
-                    listItem.classList.add('text-success'); // Green color
-                } else if (selectedAge <= 60) {
-                    listItem.classList.add('text-warning'); // Yellow color
-                } else {
-                    listItem.classList.add('text-danger'); // Red color
-                }
-            } else if (recommendation === 'Visa') {
-                // Add logic for Visa based on conditions
-                // Example: Add classes for different colors based on the amount
-                if (selectedAmount <= 1000) {
-                    listItem.classList.add('text-success');
-                } else if (selectedAmount <= 5000) {
-                    listItem.classList.add('text-warning');
-                } else {
-                    listItem.classList.add('text-danger');
-                }
-            } 
-			else if (recommendation === 'Swissbord') {
-                // Add logic for Visa based on conditions
-                // Example: Add classes for different colors based on the amount
-                if (selectedAmount >= 2500) {
-                    listItem.classList.add('text-success');
-                } else if (selectedAmount <= 5000) {
-                    listItem.classList.add('text-warning');
-                } else {
-                    listItem.classList.add('text-danger');
-                }
-            }
-			else if (recommendation === 'Zen') {
-                // Add logic for Zen based on conditions
-                // Example: Add classes for different colors based on the bank
-                if (selectedBank === 'Bank 1') {
-                    listItem.classList.add('text-success');
-                } else {
-                    listItem.classList.add('text-danger');
-                }
-            }
-
-            recommendationList.appendChild(listItem);
-        });
+  const companyInfo = {
+    UK: {
+      Revolut: {
+        greenBoxInfo: "AGE: 18 - 65. If you have revolut more than 6 months you can use normally meaning that you can add 10k immediately if not then you are restricted to 2k per day and 10k per month ",
+        yellowBoxInfo: "UK: First transfer through bank transfer max is 2k then you need to wait 24 hours and after you can do 10k per transaction ",
+        redBoxInfo: "Who Revolut works with: Bintense, Simplex, Zen"
+      },
+      Zen: {
+        greenBoxInfo: "Max you can do through Zen now is between 250$ - 10.000$ no more does not pass large amounts. ",
+        yellowBoxInfo: "First transaction UK via wire must be 1.000$ only. Then you can do total 5.000$ next day",
+        redBoxInfo: "Then after that its about limits each bank has most UK and Ireland banks"
+      },
+	  SwissBorg: {
+        greenBoxInfo: "AGE: 18 - 65. First transaction UK via wire must be 1.000$ only. Then you can do total 5k for level one.",
+        yellowBoxInfo: "If you want to do more than 5.000$,  you will need to submit more docs with them to go to the next level with them",
+        redBoxInfo: ""
+      },
+	  Cryptocom: {
+        greenBoxInfo: "AGE: 18 - 65. First transaction UK via wire must be 1.000$ only. Then you can do total 5.000$ next day",
+        yellowBoxInfo: "Then after that its about limits each bank has most UK and Ireland banks ",
+        redBoxInfo: ""
+      },
+	   Simplex: {
+        greenBoxInfo: "AGE: 18 - 65. Limits on the cards for revolut 2.000$ per day maximum 10.000$ per month ",
+        yellowBoxInfo: "Works only with card. Maximum transactions here 250$ - 10.000$",
+        redBoxInfo: "Card Visa or Mastercard will not work with UK Highstreet banks or Ireland needs to be Revolut."
+      },
+	  Bit2me: {
+        greenBoxInfo: "",
+        yellowBoxInfo: "",
+        redBoxInfo: ""
+      },
+    },
+	
+	IRELAND: {
+      Revolut: {
+        greenBoxInfo: "AGE: 18 - 65. If its new then 1.000$ bank wire only first time. After 24hr max is 10.000$ per transaction.",
+        yellowBoxInfo: "",
+        redBoxInfo: "Who Revolut works with: Bintense, Simplex, Zen"
+      },
+      Zen: {
+        greenBoxInfo: "Max you can do through Zen now is between 250$ - 10.000$ no more does not pass large amounts. ",
+        yellowBoxInfo: "First transaction via wire must be 1.000$ only. Then you can do total 5.000$ next day",
+        redBoxInfo: "Then after that its about limits each bank has most UK and Ireland banks"
+      },
+	  SwissBorg: {
+        greenBoxInfo: "AGE: 18 - 65. First transaction via wire must be 1.000$ only. Then you can do total 5k for level one.",
+        yellowBoxInfo: "If you want to do more than 5.000$,  you will need to submit more docs with them to go to the next level with them",
+        redBoxInfo: ""
+      },
+	  Cryptocom: {
+        greenBoxInfo: "AGE: 18 - 65. First transaction via wire must be 1.000$ only. Then you can do total 5.000$ next day",
+        yellowBoxInfo: "Then after that its about limits each bank has most UK and Ireland banks ",
+        redBoxInfo: ""
+      },
+	  Simplex: {
+        greenBoxInfo: "AGE: 18 - 65. Limits on the cards for revolut 2.000$ per day maximum 10.000$ per month ",
+        yellowBoxInfo: "Works only with card. Maximum transactions here 250$ - 10.000$",
+        redBoxInfo: "Card Visa or Mastercard will not work with UK Highstreet banks or Ireland needs to be Revolut."
+      },
     }
+	
+  };
 
-    // Add event change handlers for form elements
-    countrySelect.addEventListener('change', updateRecommendations);
-    ageInput.addEventListener('input', updateRecommendations);
-    amountInput.addEventListener('input', updateRecommendations);
-    bankSelect.addEventListener('change', updateRecommendations);
+  const countrySelect = document.getElementById("countrySelect");
+  const companySelect = document.getElementById("companySelect");
+  const greenBoxInfo = document.getElementById("greenBoxInfo");
+  const yellowBoxCompanyInfo = document.getElementById("yellowBoxCompanyInfo");
+  const redBoxCompanyInfo = document.getElementById("redBoxCompanyInfo");
 
-    // Initialize recommendations on page load
-    updateRecommendations();
+  countrySelect.addEventListener("change", function() {
+    const selectedCountry = this.value;
+    if (selectedCountry === "default") {
+      companySelect.disabled = true;
+      companySelect.innerHTML = "<option value='default'>Выберите компанию</option>";
+      greenBoxInfo.textContent = "";
+      yellowBoxCompanyInfo.textContent = "";
+      redBoxCompanyInfo.textContent = "";
+    } else {
+      companySelect.disabled = false;
+      const companies = companyOptions[selectedCountry];
+      const optionsHTML = companies.map(company => `<option value="${company}">${company}</option>`).join("");
+      companySelect.innerHTML = optionsHTML;
+      greenBoxInfo.textContent = "";
+      yellowBoxCompanyInfo.textContent = "";
+      redBoxCompanyInfo.textContent = "";
+    }
+  });
+
+  companySelect.addEventListener("change", function() {
+    const selectedCountry = countrySelect.value;
+    const selectedCompany = this.value;
+    if (selectedCountry in companyInfo && selectedCompany in companyInfo[selectedCountry]) {
+      const info = companyInfo[selectedCountry][selectedCompany];
+      greenBoxInfo.innerHTML = info.greenBoxInfo;
+      yellowBoxCompanyInfo.innerHTML = info.yellowBoxInfo;
+      redBoxCompanyInfo.innerHTML = info.redBoxInfo;
+    } else {
+      greenBoxInfo.textContent = "";
+      yellowBoxCompanyInfo.textContent = "";
+      redBoxCompanyInfo.textContent = "";
+    }
+  });
 </script>
 
 </body>
