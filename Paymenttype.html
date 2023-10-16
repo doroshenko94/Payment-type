@@ -257,39 +257,44 @@
   const yellowBoxCompanyInfo = document.getElementById("yellowBoxCompanyInfo");
   const redBoxCompanyInfo = document.getElementById("redBoxCompanyInfo");
 
-  countrySelect.addEventListener("change", function() {
-    const selectedCountry = this.value;
-    if (selectedCountry === "default") {
-      companySelect.disabled = true;
-      companySelect.innerHTML = "<option value='default'>Выберите компанию</option>";
-      greenBoxInfo.textContent = "";
-      yellowBoxCompanyInfo.textContent = "";
-      redBoxCompanyInfo.textContent = "";
-    } else {
-      companySelect.disabled = false;
-      const companies = companyOptions[selectedCountry];
-      const optionsHTML = companies.map(company => `<option value="${company}">${company}</option>`).join("");
-      companySelect.innerHTML = optionsHTML;
-      greenBoxInfo.textContent = "";
-      yellowBoxCompanyInfo.textContent = "";
-      redBoxCompanyInfo.textContent = "";
-    }
-  });
+ countrySelect.addEventListener("change", function() {
+        const selectedCountry = this.value;
+        if (selectedCountry === "default") {
+            companySelect.disabled = true;
+            companySelect.innerHTML = "<option value='default'>Выберите компанию</option>";
+            greenBoxInfo.textContent = "";
+            yellowBoxCompanyInfo.textContent = "";
+            redBoxCompanyInfo.textContent = "";
+        } else {
+            companySelect.disabled = false;
+            const companies = companyOptions[selectedCountry];
+            const optionsHTML = companies.map(company => `<option value="${company}">${company}</option>`).join("");
+            companySelect.innerHTML = optionsHTML;
+            // Здесь мы также обновляем информацию о компании, если выбранная компания уже имеет информацию.
+            const selectedCompany = companySelect.value;
+            updateCompanyInfo(selectedCountry, selectedCompany);
+        }
+    });
 
-  companySelect.addEventListener("change", function() {
-    const selectedCountry = countrySelect.value;
-    const selectedCompany = this.value;
-    if (selectedCountry in companyInfo && selectedCompany in companyInfo[selectedCountry]) {
-      const info = companyInfo[selectedCountry][selectedCompany];
-      greenBoxInfo.innerHTML = info.greenBoxInfo;
-      yellowBoxCompanyInfo.innerHTML = info.yellowBoxInfo;
-      redBoxCompanyInfo.innerHTML = info.redBoxInfo;
-    } else {
-      greenBoxInfo.textContent = "";
-      yellowBoxCompanyInfo.textContent = "";
-      redBoxCompanyInfo.textContent = "";
+    companySelect.addEventListener("change", function() {
+        const selectedCountry = countrySelect.value;
+        const selectedCompany = this.value;
+        updateCompanyInfo(selectedCountry, selectedCompany);
+    });
+
+    // Функция для обновления информации о компании
+    function updateCompanyInfo(selectedCountry, selectedCompany) {
+        if (selectedCountry in companyInfo && selectedCompany in companyInfo[selectedCountry]) {
+            const info = companyInfo[selectedCountry][selectedCompany];
+            greenBoxInfo.innerHTML = info.greenBoxInfo;
+            yellowBoxCompanyInfo.innerHTML = info.yellowBoxInfo;
+            redBoxCompanyInfo.innerHTML = info.redBoxInfo;
+        } else {
+            greenBoxInfo.textContent = "";
+            yellowBoxCompanyInfo.textContent = "";
+            redBoxCompanyInfo.textContent = "";
+        }
     }
-  });
 </script>
 
 </body>
